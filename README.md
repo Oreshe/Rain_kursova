@@ -1,49 +1,34 @@
-# Interactive 2D Dynamic Rain Simulation (C++ / WinAPI / GDI)
+# Інтерактивна 2D-симуляція динамічного дощу (C++ / WinAPI / GDI)
 
-A lightweight, low-level 2D interactive graphics application built natively on the Windows API using Raw Win32 and GDI (Graphics Device Interface). 
+Легковажний кросплатформний 2D-додаток інтерактивної графіки, створений мовою C++ з використанням чистого Windows API та інтерфейсу графічних пристроїв GDI (Graphics Device Interface).
 
-The project demonstrates low-level systems programming, manual Windows memory architecture management, custom physics loops, and double-buffered hardware rendering optimized to maintain a constant 60 FPS.
+Проект демонструє низькорівневе системне програмування, ручне керування архітектурою пам'яті Windows, власні фізичні цикли та подвійну буферизацію рендерингу для підтримки стабільних 60 FPS.
 
-## 🚀 Key Technical Highlights
-* **Pure Win32 API Foundation:** Zero external engine dependencies (like Unreal or Unity) or heavyweight frameworks. Built using raw `WNDCLASS` registration, message pump routing, and explicit `WndProc` callback management.
-* **Double-Buffered Smooth Rendering:** Implements advanced memory-device contexts (`CreateCompatibleDC`, `CreateCompatibleBitmap`) to prevent screen flickering and artifact tearing, ensuring 60 FPS real-time interpolation.
-* **Custom Procedural Physics Engine:** Handles custom math loops for vector coordinates calculation, linear transformation velocities, boundary colliders checking, and pseudo-random generational drops positioning.
-* **Low-Level Native Diagnostics:** Developed with aggressive hardware profiling and memory-leak checks, debugged using static/dynamic execution flow analyzers like OllyDbg.
+## 🚀 Технічні особливості
+* **Чистий WinAPI:** Повна відсутність сторонніх движків (як-от Unity чи Unreal) або важких фреймворків. Робота з низькорівневою реєстрацією `WNDCLASS`, циклом обробки повідомлень та колбеками `WndProc`.
+* **Рендеринг із подвійною буферизацією:** Використання сумісних контекстів пристрою пам'яті (`CreateCompatibleDC`, `CreateCompatibleBitmap`) для повного усунення мерехтіння екрана та артефактів розриву кадру.
+* **Власний фізичний рушій:** Реалізація векторних математичних обчислень швидкості крапель, перевірки колізій з перешкодами та псевдовипадкової генерації нових елементів.
+* **Низькорівневе профілювання:** Додаток оптимізовано з точки зору використання оперативної пам'яті та налагоджено за допомогою аналізаторів виконання (OllyDbg).
 
-## 🛠️ Tech Stack & Tooling
-* **Language:** C++ (C++17 standard features)
-* **API Architecture:** Win32 API, GDI (Graphics Device Interface)
-* **IDE:** Microsoft Visual Studio
-* **Reverse Engineering / Debugging:** OllyDbg
+## 🛠️ Стек технологій та інструменти
+* **Мова:** C++ (стандарт C++17)
+* **Графічний стек:** Win32 API, GDI (Graphics Device Interface)
+* **Середовище розробки:** Microsoft Visual Studio
+* **Аналіз та реверс-інжиніринг:** OllyDbg
 
-## 📊 Application Preview
+## 📊 Демонстрація роботи
 
 ![Project Preview](preview.gif)
 
-*Custom interactive graphical environment demonstrating real-time weather rendering cycles.*
+*Візуалізація плавного та реалістичного стікання крапель дощу в інтерактивному графічному вікні.*
 
-## 💾 Project Architecture
-* `main.cpp` — Application core bootstrap containing `WinMain`, the continuous realtime rendering loop, and low-level Window Proc input interceptors.
-* `Simulation.cpp` / `.h` — Object-Oriented state engine processing coordinate vectors transformations, drops generation, and performance metrics synchronization.
-* `Renderer.cpp` — Dedicated GDI graphics pipelines mapping system memory device canvases directly to active Win32 screen frames.
+## 💾 Структура проекту
+* `main.cpp` — точка входу в програму (`WinMain`), головний цикл рендерингу у реальному часі та обробники низькорівневого введення користувача.
+* `Simulation.cpp` / `.h` — об'єктно-орієнтований рушій станів, що відповідає за вектори координат крапель, їхню генерацію та синхронізацію швидкості.
+* `Renderer.cpp` — графічний конвеєр GDI, що малює вектори у системній пам'яті перед виведенням готового кадру на екран.
 
-## ⚡ Core Engine Snippets
-
-### Real-time Double-Buffered Canvas Pipeline
-This explicit GDI buffer management completely eliminates visual screen tearing by painting vectors inside an unmapped memory region before flipping the complete context directly onto the hardware screen canvas:
-
-```cpp
-void RenderFrame(HWND hwnd, HDC hdcDevice) {
-    HDC hdcBuffer = CreateCompatibleDC(hdcDevice);
-    HBITMAP hBitmap = CreateCompatibleBitmap(hdcDevice, screenWidth, screenHeight);
-    SelectObject(hdcBuffer, hBitmap);
-
-    // [System Memory Layer] Execute raw procedural vectors rendering
-    DrawRainDrops(hdcBuffer);
-
-    // [Hardware Blitting Layer] Instant synchronous frame swap
-    BitBlt(hdcDevice, 0, 0, screenWidth, screenHeight, hdcBuffer, 0, 0, SRCCOPY);
-
-    DeleteObject(hBitmap);
-    DeleteDC(hdcBuffer);
-}
+## 🛠️ Компіляція та запуск
+1. Склонуйте репозиторій локально.
+2. Відкрийте файл рішення (`.sln`) у **Microsoft Visual Studio**.
+3. Виберіть конфігурацію **Release / x64** або **x86**.
+4. Зберіть проект та запустіть виконуваний файл. *(Антивірус Windows SmartScreen може попередити про запуск самописного софту без цифрового підпису — натисніть «Докладніше -> Виконати в будь-якому випадку»)*.
